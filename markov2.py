@@ -56,6 +56,13 @@ class SimpleMarkovGenerator(object):
 
         #populate the first tuple and make sure it's not empty
         random_word = random.choice(chains[random_key])
+        first_letter = random_word[0]
+
+        while first_letter.islower():
+            random_key = random.choice(chains.keys())
+            random_word = random.choice(chains[random_key])
+            first_letter = random_word[0]
+
         key_word_tuple = (random_key[0], random_key[1], random_word)
         output_text = "%s %s %s" %( key_word_tuple[0].title(), key_word_tuple[1], key_word_tuple[2])
 
@@ -81,12 +88,16 @@ class SimpleMarkovGenerator(object):
 
 
 ###################################################
+def create_markov():
+    my_markov = SimpleMarkovGenerator(300)
+    my_markov_list = my_markov.combine_files(argv)
+    my_markov_diction = my_markov.make_chains(my_markov_list)
+    my_markov_text = my_markov.make_text(my_markov_diction)
+    return my_markov.end_at_punct(my_markov_text)
 
-my_markov = SimpleMarkovGenerator(140)
-my_markov_list = my_markov.combine_files(argv)
-my_markov_diction = my_markov.make_chains(my_markov_list)
-my_markov_text = my_markov.make_text(my_markov_diction)
-print my_markov.end_at_punct(my_markov_text)
+markov = create_markov()
 
-#someday we have to figure out what to do with empty strings
-#e.g. "if this string is empty, try again."
+while len(markov) <= 5:
+    markov = create_markov()
+
+print markov
