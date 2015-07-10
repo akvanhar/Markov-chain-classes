@@ -56,12 +56,21 @@ class SimpleMarkovGenerator(object):
 
         #populate the first tuple and make sure it's not empty
         random_word = random.choice(chains[random_key])
-        first_letter = random_word[0]
+        
+
+        if random_word == "":
+            random_word = random.choice(chains[random_key])
+        else:
+            first_letter = random_word[0]
 
         while first_letter.islower():
+
             random_key = random.choice(chains.keys())
-            random_word = random.choice(chains[random_key])
-            first_letter = random_word[0]
+            random_word = random.choice(chains[random_key])        
+            if random_word == "":
+                random_word = random.choice(chains[random_key])
+            else:
+                first_letter = random_word[0]
 
         key_word_tuple = (random_key[0], random_key[1], random_word)
         output_text = "%s %s %s" %( key_word_tuple[0].title(), key_word_tuple[1], key_word_tuple[2])
